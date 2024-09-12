@@ -2,18 +2,28 @@ from random import random
 from termcolor import colored
 from math import floor
 
+modes = ['u', 'b', '']
+
 def makeTest(engWords, rusWords):
     corrAnswers = 0
 
     while True:
+        print("Введите режим (доступные режимы по команде /help). По умолчанию режим обычный (пустое поле).")
+        mode = input()
+
         print("Введите кол-во слов в тесте:")
         count = input()
 
-        if count.isnumeric():
-            break
-        else:
+        if not(count.isnumeric()):
             print("Введите число!")
             continue
+        elif mode not in modes:
+            print("Подобного режима не существует")
+        elif mode == 'u' and int(count) > len(engWords):
+            print("Кол-во слов в тесте превышает кол-во слов в словаре!")
+            continue
+        else:
+            break
 
     for x in range(0, int(count)):
         randIndex = round(random() * (len(engWords) - 1))
@@ -39,6 +49,9 @@ def makeTest(engWords, rusWords):
         if answer in correctAnswers:
             print(colored("Ответ верный!", 'green'))
             corrAnswers += 1
+            if mode == 'u':
+                del engWords[randIndex]
+                del rusWords[randIndex]
             continue
         else:
             print(colored("Ответ неверный!", 'red'))
